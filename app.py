@@ -13,6 +13,7 @@ import logging
 from logging import Formatter, FileHandler
 from flask_wtf import Form
 from forms import *
+from datetime import date
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
@@ -151,8 +152,46 @@ def search_venues():
 def show_venue(venue_id):
     # shows the venue page with the given venue_id
     # TODO: replace with real venue data from the venues table, using venue_id
-    data = Venue.query.filter(Venue.id == int(venue_id)).all()[0] #################
-    return render_template('pages/show_venue.html', venue=data)
+    store = {}
+    u_show = []
+    p_show = []
+    data = Venue.query.filter(Venue.id == int(venue_id)).first()
+    _ = Venue.query.filter(Venue.id == int(venue_id)).first()
+    upcoming_shows = Show.query.filter(Show.start_time < datetime.now()).filter(Show.venue_id==_.id).all()
+    if len(upcoming_shows):
+      for item in upcoming_shows:
+          u_show.append({
+          "start_time" : str(item.start_time),
+          "venue_id" : item.venue_id,
+          "artist_id" : item.artist_id
+          })
+    past_shows = Show.query.filter(Show.start_time > datetime.now()).filter(Show.venue_id==_.id).all()
+    if len(past_shows):
+      for item in past_shows:
+          p_show.append({
+          "start_time" : str(item.start_time),
+          "venue_id" : item.venue_id,
+          "artist_id" : item.artist_id
+          })
+    store = {
+      "id": _.id,
+      "name": _.name,
+      "genres": _.genres,
+      "address" : _.address,
+      "city": _.city,
+      "state": _.state,
+      "phone": str(_.phone),
+      "website": _.website_link,
+      "facebook_link": _.facebook_link,
+      "seeking_talent": _.seeking_talent,
+      "seeking_description": _.seeking_description,
+      "image_link": _.image_link,
+      "past_shows": p_show,
+      "upcoming_shows": u_show,
+      "past_shows_count": len(p_show),
+      "upcoming_shows_count": len(u_show)
+    }
+    return render_template('pages/show_venue.html', venue=store)
 
 #  Create Venue
 #  ----------------------------------------------------------------
@@ -236,18 +275,56 @@ def search_artists():
 
 @app.route('/artists/<int:artist_id>')
 def show_artist(artist_id):
-  # shows the artist page with the given artist_id
-  # TODO: replace with real artist data from the artist table, using artist_id
+    # shows the artist page with the given artist_id
+    # TODO: replace with real artist data from the artist table, using artist_id
+    store = {}
+    u_show = []
+    p_show = []
+    # data = Artist.query.filter(Artist.id==artist_id).first()
+    _ = Artist.query.filter(Artist.id==artist_id).first()
+    upcoming_shows = Show.query.filter(Show.start_time < datetime.now()).filter(Show.artist_id==_.id).all()
+    if len(upcoming_shows):
+      for item in upcoming_shows:
+          u_show.append({
+          "start_time" : str(item.start_time),
+          "venue_id" : item.venue_id,
+          "artist_id" : item.artist_id
+          })
 
-  data = Artist.query.filter(Artist.id==artist_id).all()[0]
-  return render_template('pages/show_artist.html', artist=data)
+    past_shows = Show.query.filter(Show.start_time > datetime.now()).filter(Show.artist_id==_.id).all()
+    if len(past_shows):
+      for item in past_shows:
+          p_show.append({
+          "start_time" : str(item.start_time),
+          "venue_id" : item.venue_id,
+          "artist_id" : item.artist_id
+          })
+
+    store = {
+      "id": _.id,
+      "name": _.name,
+      "genres": _.genres,
+      "city": _.city,
+      "state": _.state,
+      "phone": str(_.phone),
+      "website": _.website_link,
+      "facebook_link": _.facebook_link,
+      "seeking_venue": _.seeking_venue,
+      "seeking_description": _.seeking_description,
+      "image_link": _.image_link,
+      "past_shows": p_show,
+      "upcoming_shows": u_show,
+      "past_shows_count": len(p_show),
+      "upcoming_shows_count": len(u_show)
+    }
+    return render_template('pages/show_artist.html', artist=store)
 
 #  Update
 #  ----------------------------------------------------------------
 @app.route('/artists/<int:artist_id>/edit', methods=['GET'])
 def edit_artist(artist_id):
     form = ArtistForm()
-    artist = Artist.query.filter(Artist.id==artist_id).all()[0]
+    artist = Artist.query.filter(Artist.id==artist_id).first()
     # TODO: populate form with fields from artist with ID <artist_id>
     return render_template('forms/edit_artist.html', form=form, artist=artist)
 
