@@ -161,17 +161,19 @@ def show_venue(venue_id):
     if len(upcoming_shows):
       for item in upcoming_shows:
           u_show.append({
-          "start_time" : str(item.start_time),
-          "venue_id" : item.venue_id,
-          "artist_id" : item.artist_id
+          "artist_id" : upcoming_shows[0].artist.id,
+          "artist_name" : upcoming_shows[0].artist.name,
+          "artist_image_link" : upcoming_shows[0].artist.image_link,
+          "start_time" : str(item.start_time)
           })
     past_shows = Show.query.filter(Show.start_time > datetime.now()).filter(Show.venue_id==_.id).all()
     if len(past_shows):
       for item in past_shows:
           p_show.append({
-          "start_time" : str(item.start_time),
-          "venue_id" : item.venue_id,
-          "artist_id" : item.artist_id
+          "artist_id" : past_shows[0].artist.id,
+          "artist_name" : past_shows[0].artist.name,
+          "artist_image_link" : past_shows[0].artist.image_link,
+          "start_time" : str(item.start_time)
           })
     store = {
       "id": _.id,
@@ -286,18 +288,20 @@ def show_artist(artist_id):
     if len(upcoming_shows):
       for item in upcoming_shows:
           u_show.append({
-          "start_time" : str(item.start_time),
-          "venue_id" : item.venue_id,
-          "artist_id" : item.artist_id
+          "venue_id" : upcoming_shows[0].venue.id,
+          "venue_name" : upcoming_shows[0].venue.name,
+          "venue_image_link" : upcoming_shows[0].venue.image_link,
+          "start_time" : str(item.start_time)
           })
 
     past_shows = Show.query.filter(Show.start_time > datetime.now()).filter(Show.artist_id==_.id).all()
     if len(past_shows):
       for item in past_shows:
           p_show.append({
-          "start_time" : str(item.start_time),
-          "venue_id" : item.venue_id,
-          "artist_id" : item.artist_id
+          "venue_id" : past_shows[0].venue.id,
+          "venue_name" : past_shows[0].venue.name,
+          "venue_image_link" : past_shows[0].venue.image_link,
+          "start_time" : str(item.start_time)
           })
 
     store = {
