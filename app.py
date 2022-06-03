@@ -98,12 +98,12 @@ class Artist(db.Model):
 #----------------------------------------------------------------------------#
 
 def format_datetime(value, format='medium'):
-  date = dateutil.parser.parse(value)
-  if format == 'full':
-      format="EEEE MMMM, d, y 'at' h:mma"
-  elif format == 'medium':
-      format="EE MM, dd, y h:mma"
-  return babel.dates.format_datetime(date, format, locale='en')
+    date = dateutil.parser.parse(value)
+    if format == 'full':
+        format="EEEE MMMM, d, y 'at' h:mma"
+    elif format == 'medium':
+        format="EE MM, dd, y h:mma"
+    return babel.dates.format_datetime(date, format, locale='en')
 
 app.jinja_env.filters['datetime'] = format_datetime
 
@@ -113,7 +113,7 @@ app.jinja_env.filters['datetime'] = format_datetime
 
 @app.route('/')
 def index():
-  return render_template('pages/home.html')
+    return render_template('pages/home.html')
 
 
 #  Venues
@@ -121,17 +121,17 @@ def index():
 
 @app.route('/venues')
 def venues():
-  # TODO: replace with real venues data.
-  # num_upcoming_shows should be aggregated based on number of upcoming shows per venue.
-  store = []
-  data = Par_venue.query.all() ###################3-m
-  for _ in data:
-      store.append({
-        "city" : _.city,
-        "state" : _.state,
-        "venues" : _.venue
-      })
-  return render_template('pages/venues.html', areas=store);
+    # TODO: replace with real venues data.
+    # num_upcoming_shows should be aggregated based on number of upcoming shows per venue.
+    store = []
+    data = Par_venue.query.all() ###################
+    for _ in data:
+        store.append({
+            "city" : _.city,
+            "state" : _.state,
+            "venues" : _.venue
+        })
+    return render_template('pages/venues.html', areas=store);
 
 @app.route('/venues/search', methods=['POST'])
 def search_venues():
@@ -141,26 +141,26 @@ def search_venues():
     res = request.form.get('search_term', '')
     item = Venue.query.filter(Venue.name.ilike("%" + res + "%")).all()
     response={
-      "count": len(item),
-      "data": item
+        "count": len(item),
+        "data": item
     }
 
     return render_template('pages/search_venues.html', results=response, search_term=request.form.get('search_term', ''))
 
 @app.route('/venues/<int:venue_id>')
 def show_venue(venue_id):
-  # shows the venue page with the given venue_id
-  # TODO: replace with real venue data from the venues table, using venue_id
-  data = Venue.query.filter(Venue.id == int(venue_id)).all()[0] #################
-  return render_template('pages/show_venue.html', venue=data)
+    # shows the venue page with the given venue_id
+    # TODO: replace with real venue data from the venues table, using venue_id
+    data = Venue.query.filter(Venue.id == int(venue_id)).all()[0] #################
+    return render_template('pages/show_venue.html', venue=data)
 
 #  Create Venue
 #  ----------------------------------------------------------------
 
 @app.route('/venues/create', methods=['GET'])
 def create_venue_form():
-  form = VenueForm()
-  return render_template('forms/new_venue.html', form=form)
+    form = VenueForm()
+    return render_template('forms/new_venue.html', form=form)
 
 @app.route('/venues/create', methods=['POST'])
 def create_venue_submission():
@@ -217,8 +217,8 @@ def delete_venue(venue_id):
 @app.route('/artists')
 def artists():
   # TODO: replace with real data returned from querying the database
-  data = Artist.query.all()
-  return render_template('pages/artists.html', artists=data)
+    data = Artist.query.all()
+    return render_template('pages/artists.html', artists=data)
 
 @app.route('/artists/search', methods=['POST'])
 def search_artists():
@@ -229,8 +229,8 @@ def search_artists():
     search_term=request.form.get('search_term', '')
     item = Artist.query.filter(Artist.name.ilike("%" + search_term + "%")).all()
     response={
-    "count": len(item),
-    "data": item
+        "count": len(item),
+        "data": item
     }
     return render_template('pages/search_artists.html', results=response, search_term=request.form.get('search_term', ''))
 
@@ -246,10 +246,10 @@ def show_artist(artist_id):
 #  ----------------------------------------------------------------
 @app.route('/artists/<int:artist_id>/edit', methods=['GET'])
 def edit_artist(artist_id):
-  form = ArtistForm()
-  artist = Artist.query.filter(Artist.id==artist_id).all()[0]
-  # TODO: populate form with fields from artist with ID <artist_id>
-  return render_template('forms/edit_artist.html', form=form, artist=artist)
+    form = ArtistForm()
+    artist = Artist.query.filter(Artist.id==artist_id).all()[0]
+    # TODO: populate form with fields from artist with ID <artist_id>
+    return render_template('forms/edit_artist.html', form=form, artist=artist)
 
 @app.route('/artists/<int:artist_id>/edit', methods=['POST'])
 def edit_artist_submission(artist_id):
@@ -268,10 +268,10 @@ def edit_artist_submission(artist_id):
 
 @app.route('/venues/<int:venue_id>/edit', methods=['GET'])
 def edit_venue(venue_id):
-  form = VenueForm()
-  venue = Venue.query.filter(Venue.id==venue_id).first()
-  # TODO: populate form with values from venue with ID <venue_id>
-  return render_template('forms/edit_venue.html', form=form, venue=venue)
+    form = VenueForm()
+    venue = Venue.query.filter(Venue.id==venue_id).first()
+    # TODO: populate form with values from venue with ID <venue_id>
+    return render_template('forms/edit_venue.html', form=form, venue=venue)
 
 @app.route('/venues/<int:venue_id>/edit', methods=['POST'])
 def edit_venue_submission(venue_id):
@@ -305,8 +305,8 @@ def edit_venue_submission(venue_id):
 
 @app.route('/artists/create', methods=['GET'])
 def create_artist_form():
-  form = ArtistForm()
-  return render_template('forms/new_artist.html', form=form)
+    form = ArtistForm()
+    return render_template('forms/new_artist.html', form=form)
 
 @app.route('/artists/create', methods=['POST'])
 def create_artist_submission():
