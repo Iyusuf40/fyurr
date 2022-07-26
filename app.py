@@ -14,6 +14,7 @@ from logging import Formatter, FileHandler
 from flask_wtf import Form
 from forms import *
 from datetime import date
+
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
@@ -47,8 +48,6 @@ class Par_venue(db.Model):
     city = db.Column(db.String(120))
     state = db.Column(db.String(120))
     venue = db.relationship("Venue", backref="par_venue", lazy=True)
-    # venue = db.Column(db.Integer, db.ForeignKey("Venue.id"),
-    #             nullable=False)
 
 
 
@@ -157,7 +156,7 @@ def show_venue(venue_id):
     p_show = []
     data = Venue.query.filter(Venue.id == int(venue_id)).first()
     _ = Venue.query.filter(Venue.id == int(venue_id)).first()
-    upcoming_shows = Show.query.filter(Show.start_time < datetime.now()).filter(Show.venue_id==_.id).all()
+    upcoming_shows = Show.query.filter(Show.start_time > datetime.now()).filter(Show.venue_id==_.id).all()
     if len(upcoming_shows):
       for item in upcoming_shows:
           u_show.append({
@@ -166,7 +165,7 @@ def show_venue(venue_id):
           "artist_image_link" : upcoming_shows[0].artist.image_link,
           "start_time" : str(item.start_time)
           })
-    past_shows = Show.query.filter(Show.start_time > datetime.now()).filter(Show.venue_id==_.id).all()
+    past_shows = Show.query.filter(Show.start_time < datetime.now()).filter(Show.venue_id==_.id).all()
     if len(past_shows):
       for item in past_shows:
           p_show.append({
@@ -284,7 +283,7 @@ def show_artist(artist_id):
     p_show = []
     # data = Artist.query.filter(Artist.id==artist_id).first()
     _ = Artist.query.filter(Artist.id==artist_id).first()
-    upcoming_shows = Show.query.filter(Show.start_time < datetime.now()).filter(Show.artist_id==_.id).all()
+    upcoming_shows = Show.query.filter(Show.start_time > datetime.now()).filter(Show.artist_id==_.id).all()
     if len(upcoming_shows):
       for item in upcoming_shows:
           u_show.append({
@@ -294,7 +293,7 @@ def show_artist(artist_id):
           "start_time" : str(item.start_time)
           })
 
-    past_shows = Show.query.filter(Show.start_time > datetime.now()).filter(Show.artist_id==_.id).all()
+    past_shows = Show.query.filter(Show.start_time < datetime.now()).filter(Show.artist_id==_.id).all()
     if len(past_shows):
       for item in past_shows:
           p_show.append({
